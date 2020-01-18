@@ -1,0 +1,7 @@
+# Env variables
+.env
+
+# Binaries for programs and plugins
+coin
+db
+main
