@@ -30,12 +30,13 @@ func init() {
 	user := os.Getenv("USER")
 	password := os.Getenv("PASSWORD")
 	dbname := os.Getenv("DBNAME")
-	fmt.Println(port)
-	fmt.Println(host)
-	fmt.Println(user)
-	fmt.Println(password)
-	fmt.Println(dbname)
-	connectString = fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+	dbURL := os.Getenv("DATABASE_URL")
+	fmt.Println(dbURL)
+	if dbURL != "" {
+		connectString = dbURL
+	} else {
+		connectString = fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+	}
 	createTable()
 }
 

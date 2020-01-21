@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"time"
 
 	"github.com/joho/godotenv"
 	tb "gopkg.in/tucnak/telebot.v2"
@@ -11,21 +10,28 @@ import (
 
 const readyStage int = 1
 
-var tgToken string
-
 func init() {
 	err := godotenv.Load()
 	if err != nil {
 		fmt.Println("Error when loading env variables")
 	}
-	tgToken = os.Getenv("TGTOKEN")
 }
 
 func main() {
-	b, err := tb.NewBot(tb.Settings{
-		Token:  tgToken,
-		Poller: &tb.LongPoller{Timeout: 10 * time.Second},
-	})
+	port := os.Getenv("PORT")
+	publicURL := os.Getenv("PUBLIC_URL")
+	token := os.Getenv("TGTOKEN")
+
+	webhook := &tb.Webhook{
+		Listen:   ":" + port,
+		Endpoint: &tb.WebhookEndpoint{PublicURL: publicURL},
+	}
+	botSettings := tb.Settings{
+		Token:  token,
+		Poller: webhook,
+	}
+
+	b, err := tb.NewBot(botSettings)
 
 	if err != nil {
 		fmt.Println(err)
